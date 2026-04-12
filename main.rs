@@ -1,3 +1,5 @@
+use rand_distr::{Normal, Distribution};
+
 fn main() {
     let version = "0.1";
     let author = "Miikka Väisälä";
@@ -38,12 +40,15 @@ fn main() {
         }
     }
 
+    let normal_dist = Normal::new(0.0, 1.0).unwrap(); // Mean = 0.0, Std Dev = 1.0
+    let mut rng = rand::thread_rng();
+
     // For loop to set values for an array
     for k in 0..NZ {
         for j in 0..NY {
             for i in 0..NX {
                 let ind = i + j * NX + k * NX * NY;
-                density_grid[ind] = 1.0;
+                density_grid[ind] = normal_dist.sample(&mut rng);
             }
         }
     }
