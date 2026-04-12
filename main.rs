@@ -1,6 +1,24 @@
 use rand::thread_rng;
 use rand_distr::{Normal, Distribution};
 
+fn initialize_coordinate_grid(xx_grid: &mut Vec<f64>, yy_grid: &mut Vec<f64>, 
+                              zz_grid: &mut Vec<f64>, 
+                              nx: usize, ny: usize, nz: usize,  
+                              dx: f64, dy: f64, dz: f64) {
+    // For loop to set values for coordinate grids
+    for k in 0..nz {
+        for j in 0..ny {
+            for i in 0..nx {
+                let ind = i + j * nx + k * nx * ny;
+                xx_grid[ind] = (i as f64) * dx;
+                yy_grid[ind] = (j as f64) * dy;
+                zz_grid[ind] = (k as f64) * dz;
+            }
+        }
+    }
+}
+
+
 fn initialize_density_grid(density_grid: &mut Vec<f64>, nx: usize, ny: usize, nz: usize) {
     let normal_dist = Normal::new(0.0, 1.0).unwrap(); // Mean = 0.0, Std Dev = 1.0
     let mut rng = thread_rng();
@@ -43,17 +61,8 @@ fn main() {
     yy_grid.resize(NGRID, 0.0);
     zz_grid.resize(NGRID, 0.0);
 
-    // For loop to set values for coordinate grids
-    for k in 0..NZ {
-        for j in 0..NY {
-            for i in 0..NX {
-                let ind = i + j * NX + k * NX * NY;
-                xx_grid[ind] = (i as f64) * DX;
-                yy_grid[ind] = (j as f64) * DY;
-                zz_grid[ind] = (k as f64) * DZ;
-            }
-        }
-    }
+    initialize_coordinate_grid(&mut xx_grid, &mut yy_grid, &mut zz_grid, 
+                               NX, NY, NZ, DX, DY, DZ);
     
     // Initialize density_grid with Gaussian random numbers
     initialize_density_grid(&mut density_grid, NX, NY, NZ);
