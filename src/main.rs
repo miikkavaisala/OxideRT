@@ -1,6 +1,8 @@
 use rand::thread_rng;
 use rand_distr::{Normal, Distribution};
 
+enum Axis {XY, XZ, YZ}
+
 fn initialize_coordinate_grid(xx_grid: &mut Vec<f64>, yy_grid: &mut Vec<f64>, 
                               zz_grid: &mut Vec<f64>, 
                               nx: usize, ny: usize, nz: usize,  
@@ -33,37 +35,18 @@ fn initialize_density_grid(density_grid: &mut Vec<f64>, nx: usize, ny: usize, nz
     }
 }
 
-fn edge_sum_xy(colden_slice_xy: &mut Vec<f64>, density_grid: &Vec<f64>, nx: usize, ny: usize, nz: usize) {
+fn edge_sum(colden_slice: &mut Vec<f64>, density_grid: &Vec<f64>, 
+            nx: usize, ny: usize, nz:usize, axis: Axis) {
     for k in 0..nz {
         for j in 0..ny {
             for i in 0..nx {
-                let ind_slice = i + j * nx;
                 let ind = i + j * nx + k * nx * ny;
-                colden_slice_xy[ind_slice] += density_grid[ind];
-            }
-        }
-    }
-}
-
-fn edge_sum_xz(colden_slice_xz: &mut Vec<f64>, density_grid: &Vec<f64>, nx: usize, ny: usize, nz: usize) {
-    for k in 0..nz {
-        for j in 0..ny {
-            for i in 0..nx {
-                let ind_slice = i + k * nx;
-                let ind = i + j * nx + k * nx * ny;
-                colden_slice_xz[ind_slice] += density_grid[ind];
-            }
-        }
-    }
-}
-
-fn edge_sum_yz(colden_slice_yz: &mut Vec<f64>, density_grid: &Vec<f64>, nx: usize, ny: usize, nz: usize) {
-    for k in 0..nz {
-        for j in 0..ny {
-            for i in 0..nx {
-                let ind_slice = j + k * ny;
-                let ind = i + j * nx + k * nx * ny;
-                colden_slice_yz[ind_slice] += density_grid[ind];
+                let ind_slice = match axis{
+                    Axis::XY => i + j * nx,
+                    Axis::XZ => i + k * nx,
+                    Axis::YZ => j + k * ny,
+                };
+                colden_slice[ind_slice] += density_grid[ind];
             }
         }
     }
@@ -114,9 +97,9 @@ fn main() {
     println!("Grid set successfully.");
 
     // Calculate simple sum for edge wise column density. 
-    edge_sum_xy(&mut colden_slice_xy, &density_grid, NX, NY, NZ);
-    edge_sum_xz(&mut colden_slice_xz, &density_grid, NX, NY, NZ);
-    edge_sum_yz(&mut colden_slice_yz, &density_grid, NX, NY, NZ);
+    edge_sum(&mut colden_slice_xy, &density_grid, NX, NY, NZ, Axis::XY);
+    edge_sum(&mut colden_slice_xz, &density_grid, NX, NY, NZ, Axis::XZ);
+    edge_sum(&mut colden_slice_yz, &density_grid, NX, NY, NZ, Axis::YZ);
 
     println!("Edge sum column density calculated successfully.");
 }
