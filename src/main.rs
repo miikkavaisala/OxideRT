@@ -3,8 +3,8 @@ use rand_distr::{Normal, Distribution};
 
 enum Axis {XY, XZ, YZ}
 
-fn initialize_coordinate_grid(xx_grid: &mut Vec<f64>, yy_grid: &mut Vec<f64>, 
-                              zz_grid: &mut Vec<f64>, 
+fn initialize_coordinate_grid(xx_grid: &mut [f64], yy_grid: &mut [f64], 
+                              zz_grid: &mut [f64], 
                               nx: usize, ny: usize, nz: usize,  
                               dx: f64, dy: f64, dz: f64) {
     // For loop to set values for coordinate grids
@@ -21,7 +21,7 @@ fn initialize_coordinate_grid(xx_grid: &mut Vec<f64>, yy_grid: &mut Vec<f64>,
 }
 
 
-fn initialize_density_grid(density_grid: &mut Vec<f64>, nx: usize, ny: usize, nz: usize) {
+fn initialize_density_grid(density_grid: &mut [f64], nx: usize, ny: usize, nz: usize) {
     let normal_dist = Normal::new(0.0, 1.0).unwrap(); // Mean = 0.0, Std Dev = 1.0
     let mut rng = thread_rng();
 
@@ -35,7 +35,7 @@ fn initialize_density_grid(density_grid: &mut Vec<f64>, nx: usize, ny: usize, nz
     }
 }
 
-fn edge_sum(colden_slice: &mut Vec<f64>, density_grid: &Vec<f64>, 
+fn edge_sum(colden_slice: &mut [f64], density_grid: &[f64], 
             nx: usize, ny: usize, nz:usize, axis: Axis) {
     for k in 0..nz {
         for j in 0..ny {
