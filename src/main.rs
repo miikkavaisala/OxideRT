@@ -69,13 +69,10 @@ fn edge_sum(
 }
 
 fn main() {
-    let version = "0.1";
-    let author = "Miikka Väisälä";
-
     // Print text to the console.
-    println!("Starting Oxide, Version {version}", version = version);
+    println!("Starting {}, Version {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
     println!("Simple Rust based radiative transfer rendering tool");
-    println!("Author: {name}", name = author);
+    println!("Author: {}", env!("CARGO_PKG_AUTHORS"));
 
     // Initialize a 3D array of zeroes.
 
