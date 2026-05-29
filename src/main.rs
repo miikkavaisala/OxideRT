@@ -1,12 +1,23 @@
 use rand::thread_rng;
-use rand_distr::{Normal, Distribution};
+use rand_distr::{Distribution, Normal};
 
-enum Axis {XY, XZ, YZ}
+enum Axis {
+    XY,
+    XZ,
+    YZ,
+}
 
-fn initialize_coordinate_grid(xx_grid: &mut [f64], yy_grid: &mut [f64], 
-                              zz_grid: &mut [f64], 
-                              nx: usize, ny: usize, nz: usize,  
-                              dx: f64, dy: f64, dz: f64) {
+fn initialize_coordinate_grid(
+    xx_grid: &mut [f64],
+    yy_grid: &mut [f64],
+    zz_grid: &mut [f64],
+    nx: usize,
+    ny: usize,
+    nz: usize,
+    dx: f64,
+    dy: f64,
+    dz: f64,
+) {
     // For loop to set values for coordinate grids
     for k in 0..nz {
         for j in 0..ny {
@@ -19,7 +30,6 @@ fn initialize_coordinate_grid(xx_grid: &mut [f64], yy_grid: &mut [f64],
         }
     }
 }
-
 
 fn initialize_density_grid(density_grid: &mut [f64], nx: usize, ny: usize, nz: usize) {
     let normal_dist = Normal::new(0.0, 1.0).unwrap(); // Mean = 0.0, Std Dev = 1.0
@@ -35,13 +45,19 @@ fn initialize_density_grid(density_grid: &mut [f64], nx: usize, ny: usize, nz: u
     }
 }
 
-fn edge_sum(colden_slice: &mut [f64], density_grid: &[f64], 
-            nx: usize, ny: usize, nz:usize, axis: Axis) {
+fn edge_sum(
+    colden_slice: &mut [f64],
+    density_grid: &[f64],
+    nx: usize,
+    ny: usize,
+    nz: usize,
+    axis: Axis,
+) {
     for k in 0..nz {
         for j in 0..ny {
             for i in 0..nx {
                 let ind = i + j * nx + k * nx * ny;
-                let ind_slice = match axis{
+                let ind_slice = match axis {
                     Axis::XY => i + j * nx,
                     Axis::XZ => i + k * nx,
                     Axis::YZ => j + k * ny,
@@ -71,32 +87,41 @@ fn main() {
     const NSLICEXY: usize = NX * NY;
     const NSLICEXZ: usize = NX * NZ;
     const NSLICEYZ: usize = NY * NZ;
-    
+
     // Physical cell spacing
     const DX: f64 = 1.0;
     const DY: f64 = 1.0;
     const DZ: f64 = 1.0;
-    
+
     // Volume grids
     let mut density_grid = vec![0.0_f64; NGRID];
-    let mut xx_grid      = vec![0.0_f64; NGRID];
-    let mut yy_grid      = vec![0.0_f64; NGRID];
-    let mut zz_grid      = vec![0.0_f64; NGRID];
-    
+    let mut xx_grid = vec![0.0_f64; NGRID];
+    let mut yy_grid = vec![0.0_f64; NGRID];
+    let mut zz_grid = vec![0.0_f64; NGRID];
+
     // Column density projection slices
     let mut colden_slice_xy = vec![0.0_f64; NSLICEXY];
     let mut colden_slice_xz = vec![0.0_f64; NSLICEXZ];
     let mut colden_slice_yz = vec![0.0_f64; NSLICEYZ];
 
-    initialize_coordinate_grid(&mut xx_grid, &mut yy_grid, &mut zz_grid, 
-                               NX, NY, NZ, DX, DY, DZ);
-    
+    initialize_coordinate_grid(
+        &mut xx_grid,
+        &mut yy_grid,
+        &mut zz_grid,
+        NX,
+        NY,
+        NZ,
+        DX,
+        DY,
+        DZ,
+    );
+
     // Initialize density_grid with Gaussian random numbers
     initialize_density_grid(&mut density_grid, NX, NY, NZ);
 
     println!("Grid set successfully.");
 
-    // Calculate simple sum for edge wise column density. 
+    // Calculate simple sum for edge wise column density.
     edge_sum(&mut colden_slice_xy, &density_grid, NX, NY, NZ, Axis::XY);
     edge_sum(&mut colden_slice_xz, &density_grid, NX, NY, NZ, Axis::XZ);
     edge_sum(&mut colden_slice_yz, &density_grid, NX, NY, NZ, Axis::YZ);
