@@ -33,8 +33,41 @@ fn initialize_density_grid(density_grid: &mut Vec<f64>, nx: usize, ny: usize, nz
     }
 }
 
-//fn edge_sum(density_grid: &mut) {
-//}
+fn edge_sum_xy(colden_slice_xy: &mut Vec<f64>, density_grid: &Vec<f64>, nx: usize, ny: usize, nz: usize) {
+    for k in 0..nz {
+        for j in 0..ny {
+            for i in 0..nx {
+                let ind_slice = i + j * nx;
+                let ind = i + j * nx + k * nx * ny;
+                colden_slice_xy[ind_slice] = colden_slice_xy[ind_slice] + density_grid[ind];
+            }
+        }
+    }
+}
+
+fn edge_sum_xz(colden_slice_xz: &mut Vec<f64>, density_grid: &Vec<f64>, nx: usize, ny: usize, nz: usize) {
+    for k in 0..nz {
+        for j in 0..ny {
+            for i in 0..nx {
+                let ind_slice = i + k * nx;
+                let ind = i + j * nx + k * nx * ny;
+                colden_slice_xz[ind_slice] = colden_slice_xz[ind_slice] + density_grid[ind];
+            }
+        }
+    }
+}
+
+fn edge_sum_yz(colden_slice_yz: &mut Vec<f64>, density_grid: &Vec<f64>, nx: usize, ny: usize, nz: usize) {
+    for k in 0..nz {
+        for j in 0..ny {
+            for i in 0..nx {
+                let ind_slice = j + k * ny;
+                let ind = i + j * nx + k * nx * ny;
+                colden_slice_yz[ind_slice] = colden_slice_yz[ind_slice] + density_grid[ind];
+            }
+        }
+    }
+}
 
 fn main() {
     let version = "0.1";
@@ -79,4 +112,11 @@ fn main() {
     initialize_density_grid(&mut density_grid, NX, NY, NZ);
 
     println!("Grid set successfully.");
+
+    // Calculate simple sum for edge wise column density. 
+    edge_sum_xy(&mut colden_slice_xy, &density_grid, NX, NY, NZ);
+    edge_sum_xz(&mut colden_slice_xz, &density_grid, NX, NY, NZ);
+    edge_sum_yz(&mut colden_slice_yz, &density_grid, NX, NY, NZ);
+
+    println!("Edge sum column density calculated successfully.");
 }
