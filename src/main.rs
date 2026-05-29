@@ -33,6 +33,9 @@ fn initialize_density_grid(density_grid: &mut Vec<f64>, nx: usize, ny: usize, nz
     }
 }
 
+//fn edge_sum(density_grid: &mut) {
+//}
+
 fn main() {
     let version = "0.1";
     let author = "Miikka Väisälä";
@@ -48,11 +51,17 @@ fn main() {
     const NY: usize = 32;
     const NZ: usize = 32;
     const NGRID: usize = NX * NY * NZ;
+    const NSLICEXY: usize =  NX * NY;
+    const NSLICEXZ: usize =  NX * NZ;
+    const NSLICEYZ: usize =  NY * NZ;
     const DX: f64 = 1.0;
     const DY: f64 = 1.0;
     const DZ: f64 = 1.0;
 
     let mut density_grid: Vec<f64> = Vec::new();
+    let mut colden_slice_xy: Vec<f64> = Vec::new();
+    let mut colden_slice_xz: Vec<f64> = Vec::new();
+    let mut colden_slice_yz: Vec<f64> = Vec::new();
     let mut xx_grid: Vec<f64> = Vec::new();
     let mut yy_grid: Vec<f64> = Vec::new();
     let mut zz_grid: Vec<f64> = Vec::new();
@@ -60,6 +69,9 @@ fn main() {
     xx_grid.resize(NGRID, 0.0);
     yy_grid.resize(NGRID, 0.0);
     zz_grid.resize(NGRID, 0.0);
+    colden_slice_xy.resize(NSLICEXY, 0.0);
+    colden_slice_xz.resize(NSLICEXZ, 0.0);
+    colden_slice_yz.resize(NSLICEYZ, 0.0);
 
     initialize_coordinate_grid(&mut xx_grid, &mut yy_grid, &mut zz_grid, 
                                NX, NY, NZ, DX, DY, DZ);
