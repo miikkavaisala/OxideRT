@@ -39,7 +39,7 @@ fn edge_sum_xy(colden_slice_xy: &mut Vec<f64>, density_grid: &Vec<f64>, nx: usiz
             for i in 0..nx {
                 let ind_slice = i + j * nx;
                 let ind = i + j * nx + k * nx * ny;
-                colden_slice_xy[ind_slice] = colden_slice_xy[ind_slice] + density_grid[ind];
+                colden_slice_xy[ind_slice] += density_grid[ind];
             }
         }
     }
@@ -51,7 +51,7 @@ fn edge_sum_xz(colden_slice_xz: &mut Vec<f64>, density_grid: &Vec<f64>, nx: usiz
             for i in 0..nx {
                 let ind_slice = i + k * nx;
                 let ind = i + j * nx + k * nx * ny;
-                colden_slice_xz[ind_slice] = colden_slice_xz[ind_slice] + density_grid[ind];
+                colden_slice_xz[ind_slice] += density_grid[ind];
             }
         }
     }
@@ -63,7 +63,7 @@ fn edge_sum_yz(colden_slice_yz: &mut Vec<f64>, density_grid: &Vec<f64>, nx: usiz
             for i in 0..nx {
                 let ind_slice = j + k * ny;
                 let ind = i + j * nx + k * nx * ny;
-                colden_slice_yz[ind_slice] = colden_slice_yz[ind_slice] + density_grid[ind];
+                colden_slice_yz[ind_slice] += density_grid[ind];
             }
         }
     }
